@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #111827;
+            color: #e5e7eb;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .card {
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            border-color: #4b5563;
+        }
+
+        .drag-handle {
+            cursor: grab;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .sortable-ghost {
+            opacity: 0.5;
+            background: #374151;
+        }
+    </style>
+</head>
+
+<body class="p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header
+            class="mb-10 flex justify-between items-center sticky top-0 bg-[#111827] z-10 py-4 border-b border-gray-800">
+            <div>
+                <h1 class="text-4xl font-bold text-white mb-2">Project Manager</h1>
+                <p class="text-gray-400">Add, reorder, and manage your portfolio projects.</p>
+            </div>
+            <div class="flex gap-4">
+                <button id="btn-save"
+                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded hidden">
+                    Save Changes
+                </button>
+                <a href="index.html" target="_blank"
+                    class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                    View Site <i class="fa-solid fa-external-link-alt ml-2"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Add Project Section -->
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-10">
+            <h2 class="text-xl font-bold text-white mb-4"><i class="fa-brands fa-github mr-2"></i> Add from GitHub</h2>
+            <div class="flex gap-4">
+                <input type="text" id="github-url" placeholder="https://github.com/username/repo"
+                    class="flex-1 bg-gray-900 border border-gray-600 text-white rounded px-4 py-2 focus:outline-none focus:border-cyan-500">
+                <button id="btn-add"
+                    class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 px-6 rounded flex items-center">
+                    <span id="add-text">Add Project</span>
+                    <i id="add-spinner" class="fa-solid fa-circle-notch fa-spin ml-2 hidden"></i>
+                </button>
+            </div>
+            <p id="add-msg" class="mt-2 text-sm text-red-400 hidden"></p>
+        </div>
+
+        <!-- Projects List -->
+        <div id="projects-list" class="space-y-4">
+            <!-- Projects injected here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const listEl = document.getElementById('projects-list');
+            const btnSave = document.getElementById('btn-save');
+            const btnAdd = document.getElementById('btn-add');
+            const inputUrl = document.getElementById('github-url');
+            const addMsg = document.getElementById('add-msg');
+
+            let projects = [];
+
+            // Initial state for Save button
+            btnSave.classList.remove('hidden');
+            btnSave.disabled = true;
+            btnSave.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // Fetch initial data
+            fetch('/api/projects')
+                .then(res => res.json())
+                .then(data => {
+                    projects = data.projectData || [];
+                    renderList();
+                });
+
+            // Initialize Sortable
+            new Sortable(listEl, {
+                handle: '.drag-handle',
+                animation: 150,
+                onEnd: () => {
+                    updateProjectsOrder();
+                    enableSave();
+                }
+            });
+
+            function renderList() {
+                listEl.innerHTML = '';
+                projects.forEach((p, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'card p-4 rounded-lg flex gap-4 items-center group';
+                    item.dataset.id = p.id;
+                    item.innerHTML = `
+                        <div class="drag-handle text-gray-500 hover:text-white p-2">
+                            <i class="fa-solid fa-grip-vertical text-xl"></i>
+                        </div>
+                        
+                        <div class="w-16 h-16 bg-black rounded overflow-hidden flex-shrink-0 relative border border-gray-700">
+                            <img src="${p.image || ''}" class="w-full h-full object-cover" id="img-${p.id}" onerror="this.style.display='none'">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-xs text-white text-center p-1"
+                                 onclick="triggerUpload('${p.id}')">
+                                Change Image
+                            </div>
+                        </div>
+
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-bold text-white text-lg truncate">${p.name}</h3>
+                                <span class="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded font-mono">${p.id}</span>
+                            </div>
+                            <p class="text-gray-400 text-sm truncate">${p.tagline}</p>
+                        </div>
+
+                        <button onclick="deleteProject('${p.id}')" class="text-gray-500 hover:text-red-500 p-2 transition-colors" title="Delete Project">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                        <input type="file" id="file-${p.id}" class="hidden" accept="image/*" onchange="uploadImage('${p.id}', this)">
+                    `;
+                    listEl.appendChild(item);
+                });
+            }
+
+            function enableSave() {
+                btnSave.disabled = false;
+                btnSave.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnSave.textContent = 'Save Changes';
+            }
+
+            function disableSave() {
+                btnSave.disabled = true;
+                btnSave.classList.add('opacity-50', 'cursor-not-allowed');
+                btnSave.textContent = 'Save Changes';
+            }
+
+            // Add Project
+            btnAdd.addEventListener('click', () => {
+                const url = inputUrl.value.trim();
+                if (!url) {
+                    addMsg.textContent = "Please enter a GitHub URL.";
+                    addMsg.classList.remove('hidden');
+                    return;
+                }
+
+                setLoading(true);
+                fetch('/api/add_project', {
+                    method: 'POST',
+                    body: JSON.stringify({ url })
+                })
+                    .then(res => {
+                        if (!res.ok) throw new Error('Failed to fetch GitHub data');
+                        return res.json();
+                    })
+                    .then(data => {
+                        projects.unshift(data.project);
+                        renderList();
+                        inputUrl.value = '';
+                        addMsg.classList.add('hidden');
+                        setLoading(false);
+                    })
+                    .catch(err => {
+                        addMsg.textContent = err.message;
+                        addMsg.classList.remove('hidden');
+                        setLoading(false);
+                    });
+            });
+
+            // Save Order
+            btnSave.addEventListener('click', () => {
+                btnSave.textContent = 'Saving...';
+                fetch('/api/save_projects', {
+                    method: 'POST',
+                    body: JSON.stringify(projects)
+                })
+                    .then(res => res.json())
+                    .then(() => {
+                        btnSave.textContent = 'Saved!';
+                        setTimeout(() => {
+                            disableSave();
+                        }, 2000);
+                    });
+            });
+
+            // Helpers
+            window.updateProjectsOrder = () => {
+                const newOrder = [];
+                listEl.querySelectorAll('.card').forEach(el => {
+                    const id = el.dataset.id;
+                    const project = projects.find(p => p.id === id);
+                    if (project) newOrder.push(project);
+                });
+                projects = newOrder;
+            };
+
+            window.deleteProject = (id) => {
+                if (confirm('Are you sure you want to delete this project?')) {
+                    projects = projects.filter(p => p.id !== id);
+                    renderList();
+                    enableSave(); // Enable save button after delete
+                }
+            };
+
+            window.triggerUpload = (id) => {
+                document.getElementById(`file-${id}`).click();
+            };
+
+            window.uploadImage = (id, input) => {
+                if (input.files && input.files[0]) {
+                    const formData = new FormData();
+                    formData.append('projectId', id);
+                    formData.append('image', input.files[0]);
+
+                    fetch('/api/upload_image', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                const img = document.getElementById(`img-${id}`);
+                                img.src = data.newPath + '?t=' + Date.now();
+                                img.style.display = 'block';
+
+                                // Update local state
+                                const p = projects.find(p => p.id === id);
+                                if (p) p.image = data.newPath;
+                            }
+                        });
+                }
+            };
+
+            function setLoading(isLoading) {
+                const btn = document.getElementById('btn-add');
+                const text = document.getElementById('add-text');
+                const spinner = document.getElementById('add-spinner');
+
+                if (isLoading) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    text.textContent = 'Adding...';
+                    spinner.classList.remove('hidden');
+                } else {
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    text.textContent = 'Add Project';
+                    spinner.classList.add('hidden');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

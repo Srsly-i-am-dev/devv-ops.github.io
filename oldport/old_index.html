@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jalpan's Portfolio</title>
+    <style>
+        :root {
+            --bg-primary: #0f1319;
+            --bg-secondary: #1a2028;
+            --accent: #20C6D8;
+            --accent-hover: #4CDEEE;
+            --accent-light: rgba(32, 198, 216, 0.1);
+            --text-primary: #f1f1f1;
+            --text-secondary: #b3b3b3;
+            --card-bg: #1c232d;
+            --card-hover: #252e3a;
+            --border: #2a3544;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--accent);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent-hover);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            flex-wrap: wrap; /* Ensure responsiveness */
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            order: 2; /* Moves hamburger to the right in flex layout */
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+                margin-left: auto; /* Pushes hamburger to the right */
+            }
+
+            nav {
+                order: 3; /* Ensures nav stays below hamburger if needed */
+                width: 100%;
+            }
+
+            nav ul {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                gap: 0;
+                flex-direction: column;
+                background-color: var(--bg-secondary);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                padding: 20px 0;
+            }
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .logo:hover {
+            transform: rotate(3deg);
+        }
+
+        .logo.easter-egg {
+            animation: logoSpin 1s ease;
+        }
+
+        @keyframes logoSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav ul li a {
+            color: var(--text-primary);
+            font-weight: 500;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            position: relative;
+            z-index: 2;
+            padding: 2rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero h1::after {
+            content: '|';
+            position: absolute;
+            right: -15px;
+            color: var(--accent);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            background-color: var(--accent);
+            color: var(--bg-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn:hover {
+            background-color: var(--accent-hover);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(32, 198, 216, 0.3);
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+        }
+
+        .cta-btn:hover::before {
+            left: 100%;
+        }
+
+        .sim-control-btn {
+            background-color: transparent;
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .sim-control-btn:hover {
+            background-color: var(--card-hover);
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background-color: var(--accent);
+        }
+
+        .about {
+            padding: 10px 0;
+            position: relative;
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .bubble {
+            position: fixed;
+            background-color: var(--accent);
+            border-radius: 50%;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: -1;
+            animation: floatBubble 8s ease-in-out infinite;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        .skills {
+            margin-top: 2rem;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .skill-tag {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .skill-tag:hover {
+            background-color: var(--accent-light);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .projects {
+            padding: 100px 0;
+            background-color: var(--bg-secondary);
+            position: relative;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--border);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(32, 198, 216, 0.2);
+            background-color: var(--card-hover);
+            border-color: var(--accent);
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 0;
+            background-color: var(--accent);
+            transition: height 0.4s ease;
+        }
+
+        .project-card:hover::before {
+            height: 100%;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.3s ease;
+        }
+
+        .project-card:hover .card-header {
+            background-color: rgba(32, 198, 216, 0.05);
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .project-card:hover .project-title {
+            color: var(--accent);
+        }
+
+        .project-links a {
+            margin-left: 1rem;
+            font-size: 1.25rem;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .project-links a:hover {
+            transform: rotate(15deg) scale(1.2);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex: 1;
+        }
+
+        .project-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-tag {
+            background-color: var(--accent-light);
+            color: var(--accent);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            background-color: var(--accent);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+        }
+
+        .card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .project-card:hover .card-footer {
+            background-color: rgba(32, 198, 216, 0.05);
+        }
+
+        .footer {
+            background-color: var(--bg-secondary);
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--accent);
+            color: var(--bg-primary);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 99;
+            transform: scale(0);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .back-to-top:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 5px 15px rgba(32, 198, 216, 0.3);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+        }
+
+        .bar {
+            display: block;
+            width: 25px;
+            height: 3px;
+            margin: 5px auto;
+            transition: all 0.3s ease;
+            background-color: var(--text-primary);
+        }
+
+        .particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .konami-active {
+            animation: matrixBackground 20s linear;
+        }
+
+        @keyframes matrixBackground {
+            0% { background-color: var(--bg-primary); }
+            10% { background-color: #001a00; }
+            90% { background-color: #001a00; }
+            100% { background-color: var(--bg-primary); }
+        }
+
+        .cursor-trail {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.5;
+            transition: width 0.3s, height 0.3s, opacity 0.3s;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(32, 198, 216, 0.4);
+            transform: scale(0);
+            animation: rippleEffect 1s linear;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .hidden-fish {
+            position: fixed;
+            pointer-events: none;
+            z-index: 100;
+            width: 40px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #20C6D8;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            animation: swim 15s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(32, 198, 216, 0.6));
+        }
+
+        .hidden-fish::before {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-left: 20px solid var(--accent);
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .hidden-fish::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 5px;
+            height: 5px;
+            background-color: #000;
+            border-radius: 50%;
+        }
+
+        @keyframes swim {
+            0% { transform: translate(-100px, 100px) rotate(0deg); }
+            25% { transform: translate(calc(100vw + 100px), 50vh) rotate(0deg); }
+            50% { transform: translate(calc(100vw + 100px), calc(100vh - 100px)) rotate(180deg); }
+            75% { transform: translate(-100px, 70vh) rotate(180deg); }
+            100% { transform: translate(-100px, 100px) rotate(0deg); }
+        }
+
+        .matrix-text {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: -1;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            opacity: 0;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .matrix-active .matrix-text {
+            opacity: 0.3;
+            animation: fadeIn 2s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 0.3; }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .hamburger.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active .bar:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .hamburger.active .bar:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+
+            nav ul {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                gap: 0;
+                flex-direction: column;
+                background-color: var(--bg-secondary);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+                padding: 20px 0;
+            }
+
+            nav ul.active {
+                left: 0;
+            }
+
+            nav ul li {
+                margin: 16px 0;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content {
+                padding: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .cta-btn, .sim-control-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .about-content {
+                flex-direction: column;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header-content">
+            <h1 class="logo" id="logo">Jalpan<span>_</span>Vyas</h1>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<section class="hero" id="home">
+    <canvas class="particle-canvas" id="particle-canvas"></canvas>
+    <div class="container">
+        <div class="hero-content">
+            <h1 id="typing-text">Hi, I'm <span style="color: var(--accent);">Jalpan</span></h1>
+            <p>A passionate developer exploring the intersection of simulation, AI, and interactive web experiences.</p>
+            <div class="hero-buttons">
+                <a href="#projects" class="cta-btn" id="cta-btn">View My Work</a>
+                <button class="sim-control-btn" id="reset-simulation">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                    Reset Pattern
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="about" id="about">
+    <div class="container">
+        <h2 class="section-title" data-text="About Me">About Me</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>I'm a developer with a passion for bringing creative ideas to life through code. My focus areas include AI, physics simulations, algorithmic visualizations, and web development. I enjoy building projects that combine technical challenge with visual appeal.</p>
+                <p>With a strong foundation in Python and web technologies, I create projects ranging from fluid dynamics simulations to neural network-based games and pathfinding visualizers.</p>
+
+                <div class="skills">
+                    <h3>My Skills</h3>
+                    <div class="skills-list" id="skills-list">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">HTML/CSS</span>
+                        <span class="skill-tag">C#</span>
+                        <span class="skill-tag">Flask</span>
+                        <span class="skill-tag">Pygame</span>
+                        <span class="skill-tag">Neural Networks</span>
+                        <span class="skill-tag">Physics Simulations</span>
+                        <span class="skill-tag">Algorithms</span>
+                        <span class="skill-tag">Genetic Algorithms</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="projects" id="projects">
+    <div class="container">
+        <h2 class="section-title">My Projects</h2>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="simulation">Simulations</button>
+            <button class="filter-btn" data-filter="ai">AI</button>
+            <button class="filter-btn" data-filter="web">Web</button>
+            <button class="filter-btn" data-filter="games">Games</button>
+        </div>
+        <div class="projects-grid" id="projects-grid">
+            <!-- Projects will be loaded here via JavaScript -->
+        </div>
+    </div>
+</section>
+
+<footer class="footer" id="contact">
+    <div class="container">
+        <div class="footer-content">
+            <p>© 2025 Jalpan. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://github.com/Jalpan04" target="_blank" aria-label="GitHub">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                </a>
+                <a href="#" target="_blank" aria-label="LinkedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                </a>
+                <a href="/cdn-cgi/l/email-protection#bf9c90918b9e9c8fbf959e938f9e91d19b9a89" aria-label="Email">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div class="back-to-top" id="back-to-top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+</div>
+
+<div class="hidden-fish" id="hidden-fish"></div>
+<div class="matrix-text" id="matrix-text"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+<script>
+    // Project Data
+    const projectsData = [
+        {
+            name: "Asteroid--training-using-Generational-algo",
+            title: "Asteroid AI Training",
+            description: "Asteroids game with AI agents trained over generations using neural networks and a genetic algorithm. Built with Pygame.",
+            language: "Python",
+            url: "https://github.com/Jalpan04/Asteroid--training-using-Generational-algo",
+            stars: 1,
+            date: "May 2025",
+            categories: ["ai", "games"],
+            topics: ["artificial-intelligence", "astroids-game", "genetic-algorithm", "neural-network", "pygame", "python"]
+        },
+        {
+            name: "brat-text-generator",
+            title: "BRAT Text Generator",
+            description: "A text generation tool built with HTML.",
+            language: "HTML",
+            url: "https://github.com/Jalpan04/brat-text-generator",
+            stars: 0,
+            date: "April 2025",
+            categories: ["web"],
+            topics: []
+        },
+        {
+            name: "chatdev",
+            title: "Chat Dev",
+            description: "A web-based chat application.",
+            language: "HTML",
+            url: "https://github.com/Jalpan04/chatdev",
+            stars: 0,
+            date: "April 2025",
+            categories: ["web"],
+            topics: []
+        },
+        {
+            name: "Electron_stimulator",
+            title: "Electron Simulator",
+            description: "A Pygame-based electron simulation where electrons repel each other, bounce off walls, and leave trails. Motion follows Coulomb-like forces with damping.",
+            language: "Python",
+            url: "https://github.com/Jalpan04/Electron_stimulator",
+            stars: 0,
+            date: "May 2025",
+            categories: ["simulation"],
+            topics: []
+        },
+        {
+            name: "Fluid_simulator",
+            title: "Fluid Simulator",
+            description: "This project implements a real-time fluid simulation using Navier-Stokes equations. The simulation models fluid behavior, including density diffusion, advection, and velocity updates, creating realistic smoke or liquid-like effects.",
+            language: "Python",
+            url: "https://github.com/Jalpan04/Fluid_simulator",
+            stars: 0,
+            date: "May 2025",
+            categories: ["simulation"],
+            topics: ["2d-fluids", "fluid-simulation", "navier-stokes-equations", "physics-simulation", "pygame", "python"]
+        },
+        {
+            name: "game_of_life",
+            title: "Game of Life",
+            description: "A Python implementation of John Conway's Game of Life using pygame. This simulation of cellular automata follows simple rules to create complex, evolving patterns.",
+            language: "Python",
+            url: "https://github.com/Jalpan04/game_of_life",
+            stars: 2,
+            date: "May 2025",
+            categories: ["simulation", "games"],
+            topics: []
+        },
+        {
+            name: "Grappling-using-Pygame",
+            title: "Grappling Hook Game",
+            description: "A grappling hook game implemented in Pygame.",
+            language: "Python",
+            url: "https://github.com/Jalpan04/Grappling-using-Pygame",
+            stars: 0,
+            date: "May 2025",
+            categories: ["games"],
+            topics: ["grappling-hook", "pygame", "python"]
+        },
+        {
+            name: "identity",
+            title: "!dentity",
+            description: "!dentity is a Windows Forms application designed to help users catalog and manage their personal interests in an intuitive, user-friendly interface. Built with C# and .NET Framework 4.8.",
+            language: "C#",
+            url: "https://github.com/Jalpan04/identity",
+            stars: 0,
+            date: "May 2025",
+            categories: ["web"],
+            topics: ["csharp", "desktop-application", "dotnet-framework", "oops-in-csharp", "winforms"]
+        },
+        {
+            name: "jax-web-compiler",
+            title: "JAX Web Compiler",
+            description: "JAX web Compiler is an online Python compiler built with Flask and JavaScript. It features a code editor, real-time output, and a modern UI.",
+            language: "HTML",
+            url: "https://github.com/Jalpan04/jax-web-compiler",
+            stars: 1,
+            date: "April 2025",
+            categories: ["web"],
+            topics: []
+        },
+        {
+            name: "JaxPY",
+            title: "JaxPY",
+            description: "Python-based project.",
+            language: "Python",
+            url: "https://github.com/Jalpan04/JaxPY",
+            stars: 0,
+            date: "April 2025",
+            categories: ["web"],
+            topics: []
+        },
+        {
+            name: "JaxYTdl",
+            title: "JAX YouTube Downloader",
+            description: "JaxYTdl is a lightweight and user-friendly YouTube video downloader built with Flask. It allows you to download YouTube videos in various resolutions or extract audio in MP3 format.",
+            language: "Python",
+            url: "https://github.com/Jalpan04/JaxYTdl",
+            stars: 2,
+            date: "February 2025",
+            categories: ["web"],
+            topics: []
+        },
+        {
+            name: "Maze-Solver-Visualizer",
+            title: "Maze Solver Visualizer",
+            description: "Maze Pathfinder is a dynamic visualizer that brings maze-solving algorithms to life. Watch as DFS, BFS, A*, and Dijkstra's algorithm work their way through randomly generated mazes, finding the shortest paths step-by-step in real time.",
+            language: "Python",
+            url: "https://github.com/Jalpan04/Maze-Solver-Visualizer",
+            stars: 1,
+            date: "May 2025",
+            categories: ["simulation"],
+            topics: ["algorithm", "maze-solver", "pygame", "python", "visualization"]
+        },
+        {
+            name: "Particle-Life-Simulator",
+            title: "Particle Life Simulator",
+            description: "A simulation that models life-like behaviors through particle interactions.",
+            language: "HTML",
+            url: "https://github.com/Jalpan04/Particle-Life-Simulator",
+            stars: 0,
+            date: "May 2025",
+            categories: ["simulation"],
+            topics: []
+        },
+        {
+            name: "PixelPredict",
+            title: "PixelPredict",
+            description: "A web app for digit recognition using a custom neural network trained on MNIST. Draw digits, get predictions with confidence scores. Built with Flask and NumPy.",
+            language: "HTML",
+            url: "https://github.com/Jalpan04/PixelPredict",
+            stars: 0,
+            date: "May 2025",
+            categories: ["ai", "web"],
+            topics: ["digit-recognition", "html-css-javascript", "image-processing", "machinelearning", "mnist", "neural-network", "python"]
+        }
+    ];
+
+    // DOM Elements
+    const projectsGrid = document.getElementById('projects-grid');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('nav ul');
+    const backToTopBtn = document.getElementById('back-to-top');
+    const particleCanvas = document.getElementById('particle-canvas');
+
+    // Populate Projects
+    function populateProjects(filter = 'all') {
+        projectsGrid.innerHTML = '';
+
+        const filteredProjects = filter === 'all'
+            ? projectsData
+            : projectsData.filter(project => project.categories.includes(filter));
+
+        filteredProjects.forEach(project => {
+            const projectCard = document.createElement('div');
+            projectCard.className = 'project-card';
+
+            const languageColor = getLanguageColor(project.language);
+
+            projectCard.innerHTML = `
+                    <div class="card-header">
+                        <div>
+                            <h3 class="project-title">${project.title}</h3>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: ${languageColor};"></span>
+                                <span>${project.language}</span>
+                            </div>
+                        </div>
+                        <div class="project-links">
+                            <a href="${project.url}" target="_blank" aria-label="GitHub Repository">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="project-desc">${project.description}</p>
+                        <div class="project-tech">
+                            ${project.topics.map(topic => `<span class="tech-tag">${topic}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span>${project.date}</span>
+                        <span>⭐ ${project.stars}</span>
+                    </div>
+                `;
+
+            projectsGrid.appendChild(projectCard);
+        });
+    }
+
+    // Get Language Color
+    function getLanguageColor(language) {
+        const colors = {
+            'Python': '#3572A5',
+            'HTML': '#e34c26',
+            'JavaScript': '#f1e05a',
+            'C#': '#178600',
+            'CSS': '#563d7c',
+            'TypeScript': '#2b7489'
+        };
+
+        return colors[language] || '#6e57e0';
+    }
+
+    // Initialize Projects
+    populateProjects();
+
+    // Filter Projects
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const filter = button.getAttribute('data-filter');
+
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            populateProjects(filter);
+        });
+    });
+
+    // Mobile Menu Toggle
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('nav ul li a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+
+    // Back to Top Button
+    window.addEventListener('scroll', () => {
+        if (document.body.scrollTop > 500 || document.documentElement.scrollTop > 500) {
+            backToTopBtn.classList.add('visible');
+        } else {
+            backToTopBtn.classList.remove('visible');
+        }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Particle Life Simulation for Hero Section
+    class ParticleLifeSimulation {
+        constructor(canvas) {
+            this.canvas = canvas;
+            this.ctx = canvas.getContext('2d');
+            this.particles = [];
+            this.species = 6;
+            this.particlesPerSpecies = 60;
+            this.maxSpeed = 2;
+            this.friction = 0.05;
+            this.repelRadius = 20;
+            this.attractRadius = 200;
+
+            this.interactions = [];
+            this.colors = [
+                'rgba(119, 228, 200, 0.8)',
+                'rgba(54, 194, 206, 0.8)',
+                'rgba(71, 140, 207, 0.8)',
+                'rgba(69, 53, 193, 0.8)',
+                'rgba(97, 75, 183, 0.8)',
+                'rgb(31, 68, 204, 0.8)'
+            ];
+
+            this.initInteractions();
+            this.initParticles();
+
+            window.addEventListener('resize', () => {
+                this.resizeCanvas();
+                this.initParticles();
+            });
+        }
+
+        initInteractions() {
+            for (let i = 0; i < this.species; i++) {
+                this.interactions[i] = [];
+                for (let j = 0; j < this.species; j++) {
+                    this.interactions[i][j] = Math.random() * 2 - 1;
+                }
+            }
+
+            this.interactions[0][0] = 0.7;
+            this.interactions[1][2] = -0.8;
+            this.interactions[2][1] = -0.8;
+            this.interactions[3][4] = 0.9;
+            this.interactions[4][3] = 0.6;
+        }
+
+        initParticles() {
+            this.particles = [];
+
+            for (let s = 0; s < this.species; s++) {
+                for (let i = 0; i < this.particlesPerSpecies; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * this.maxSpeed,
+                        vy: (Math.random() - 0.5) * this.maxSpeed,
+                        species: s,
+                        size: Math.random() * 3 + 2
+                    });
+                }
+            }
+        }
+
+        resizeCanvas() {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+        }
+
+        update() {
+            for (let i = 0; i < this.particles.length; i++) {
+                const p1 = this.particles[i];
+
+                for (let j = 0; j < this.particles.length; j++) {
+                    if (i === j) continue;
+
+                    const p2 = this.particles[j];
+                    const dx = p2.x - p1.x;
+                    const dy = p2.y - p1.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance > 0 && distance < this.attractRadius) {
+                        const force = this.interactions[p1.species][p2.species];
+                        const nx = dx / distance;
+                        const ny = dy / distance;
+
+                        if (distance < this.repelRadius) {
+                            const repelForce = (1 - distance / this.repelRadius) * 0.2;
+                            p1.vx -= nx * repelForce;
+                            p1.vy -= ny * repelForce;
+                        } else {
+                            const r = distance - this.repelRadius;
+                            const attractStrength = (1 - r / (this.attractRadius - this.repelRadius)) * 0.03;
+                            p1.vx += nx * force * attractStrength;
+                            p1.vy += ny * force * attractStrength;
+                        }
+                    }
+                }
+
+                p1.vx *= (1 - this.friction);
+                p1.vy *= (1 - this.friction);
+
+                const speed = Math.sqrt(p1.vx * p1.vx + p1.vy * p1.vy);
+                if (speed > this.maxSpeed) {
+                    p1.vx = (p1.vx / speed) * this.maxSpeed;
+                    p1.vy = (p1.vy / speed) * this.maxSpeed;
+                }
+
+                // Update position
+                p1.x += p1.vx;
+                p1.y += p1.vy;
+
+                // Bounce off canvas boundaries
+                if (p1.x < p1.size) {
+                    p1.x = p1.size;
+                    p1.vx = -p1.vx;
+                }
+                if (p1.x > this.canvas.width - p1.size) {
+                    p1.x = this.canvas.width - p1.size;
+                    p1.vx = -p1.vx;
+                }
+                if (p1.y < p1.size) {
+                    p1.y = p1.size;
+                    p1.vy = -p1.vy;
+                }
+                if (p1.y > this.canvas.height - p1.size) {
+                    p1.y = this.canvas.height - p1.size;
+                    p1.vy = -p1.vy;
+                }
+            }
+        }
+
+        draw() {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.drawConnections();
+
+            for (const p of this.particles) {
+                this.ctx.fillStyle = this.colors[p.species];
+                this.ctx.beginPath();
+                this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        drawConnections() {
+            const maxConnectionDistance = 100;
+
+            for (let i = 0; i < this.particles.length; i++) {
+                const p1 = this.particles[i];
+
+                for (let j = i + 1; j < this.particles.length; j++) {
+                    const p2 = this.particles[j];
+
+                    if (p1.species !== p2.species) continue;
+
+                    const dx = p2.x - p1.x;
+                    const dy = p2.y - p1.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < maxConnectionDistance) {
+                        const opacity = 1 - distance / maxConnectionDistance;
+                        this.ctx.strokeStyle = this.colors[p1.species].replace('0.8', opacity * 0.5);
+                        this.ctx.lineWidth = 1;
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(p1.x, p1.y);
+                        this.ctx.lineTo(p2.x, p2.y);
+                        this.ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        animate() {
+            this.update();
+            this.draw();
+            requestAnimationFrame(() => this.animate());
+        }
+
+        start() {
+            this.resizeCanvas();
+            this.animate();
+            window.particleLifeSimulation = this;
+        }
+
+        applyRepulsionForce(x, y, radius = 200, strength = 0.1) {
+            for (const p of this.particles) {
+                const dx = p.x - x;
+                const dy = p.y - y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < radius && distance > 0) {
+                    const force = strength * (1 - distance / radius);
+                    const nx = dx / distance;
+                    const ny = dy / distance;
+                    p.vx += nx * force;
+                    p.vy += ny * force;
+                }
+            }
+        }
+    }
+
+    function initParticleLifeSimulation() {
+        const canvas = document.getElementById('particle-canvas');
+        window.particleLifeSimulation = new ParticleLifeSimulation(canvas);
+        window.particleLifeSimulation.start();
+    }
+
+    function addCursorInteraction() {
+        const canvas = document.getElementById('particle-canvas');
+        const simulation = window.particleLifeSimulation;
+
+        if (!simulation) return;
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            for (const p of simulation.particles) {
+                const dx = mouseX - p.x;
+                const dy = mouseY - p.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 200) {
+                    const force = 0.05 * (1 - distance / 200);
+                    p.vx += (dx / distance) * force;
+                    p.vy += (dy / distance) * force;
+                }
+            }
+        });
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            simulation.applyRepulsionForce(mouseX, mouseY);
+        });
+    }
+
+    window.addEventListener('load', () => {
+        initParticleLifeSimulation();
+
+        document.getElementById('reset-simulation').addEventListener('click', () => {
+            initParticleLifeSimulation();
+        });
+
+        addCursorInteraction();
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-10px)';
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0)';
+        });
+    });
+</script>
+</body>
+</html>

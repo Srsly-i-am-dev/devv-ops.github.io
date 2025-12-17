@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="gradient-bg flex items-center justify-center p-4">
+
+<div class="browser-frame w-full max-w-7xl h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+    <div class="address-bar-container pt-2 select-none">
+        <div class="flex items-end">
+            <div class="tabs-container flex items-end px-2 space-x-1 overflow-x-auto"></div>
+            <button id="btn-new-tab" class="p-2 mb-1 text-gray-400 hover:text-white hover:bg-white/10 rounded-md transition-colors flex-shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </button>
+        </div>
+        <div class="flex items-center p-2 space-x-2">
+            <div class="flex space-x-1 text-gray-400">
+                <svg id="btn-back" class="w-5 h-5 nav-btn cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                <svg id="btn-next" class="w-5 h-5 nav-btn cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                <svg id="btn-home" class="w-5 h-5 nav-btn cursor-pointer ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            </div>
+            <input id="address-input" type="text" class="flex-1 bg-white/5 text-white px-4 py-1.5 rounded-xl border-0 focus:outline-none focus:ring-2 focus:ring-blue-400/50" readonly>
+        </div>
+    </div>
+
+    <div class="content-area flex-1 overflow-y-auto">
+        <div id="page-home" class="content-page p-8 active">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-7xl md:text-9xl font-light text-white mb-12 floating">Portfolio</h1>
+                <div class="max-w-xl mx-auto mb-16">
+                    <input type="text" placeholder="Explore my work..." class="w-full bg-white/10 backdrop-blur-md text-white placeholder-gray-300 rounded-2xl py-4 px-6 text-lg focus:outline-none focus:ring-2 focus:ring-white/50" readonly>
+                </div>
+                <div id="home-shortcuts" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6"></div>
+            </div>
+        </div>
+        <div id="page-code" class="content-page text-white github-page-bg"></div>
+        <div id="page-projects" class="content-page"></div>
+    </div>
+</div>
+
+<div id="context-menu">
+    <button id="context-menu-new-tab">Open in new tab</button>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
